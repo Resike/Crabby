@@ -30,9 +30,10 @@ CrabbyVars = Crabby:CopySettings(DefaultSettings,CrabbyVars)
 
 local frame = CreateFrame("Frame", nil, UIParent)
 frame:RegisterEvent("ADDON_LOADED")
+frame:SetFrameStrata("High")
 frame:SetPoint("Center", CrabbyVars.x, CrabbyVars.y)
-frame:SetWidth(512)
-frame:SetHeight(512)
+frame:SetWidth(600)
+frame:SetHeight(600)
 frame:SetAlpha(0.99)
 frame:SetMovable(true)
 frame:EnableMouse(true)
@@ -41,14 +42,17 @@ frame:RegisterForDrag("LeftButton")
 
 local model = CreateFrame("PlayerModel", nil, frame)
 model:SetModel("Creature\\Deepseacrab\\deepseacrab_ghost.m2")
-model:SetPosition(0, 0, 0)
+model:SetPosition(0, 0, -0.0001)
 model:SetRotation(math.rad(0))
 model:SetAlpha(0.99)
 model:SetAllPoints(frame)
 model:Show()
 
+local animframe = CreateFrame("Frame", nil, UIParent)
+
 -- You can animate the model by changing this from 0-802
 local modelanimation = -1
+local animation = false
 
 frame:SetScript("OnMouseDown", function(self, button)
 	if button == "LeftButton" then
@@ -66,18 +70,48 @@ frame:SetScript("OnMouseUp", function(self, button)
 		self:ClearAllPoints()
 		self:SetPoint("CENTER", L2 - L1 + (W2 - W1) / 2, B2 - B1 + (H2 - H1) / 2)
 	elseif button == "RightButton" then
-		modelanimation = modelanimation + 1
+		if IsControlKeyDown() then
+			animation = "Negative"
+			modelanimation = 41
+		elseif IsAltKeyDown() then
+			animation = "Positive"
+			modelanimation = 40
+		else
+			modelanimation = modelanimation + 1
+		end
 	elseif button == "MiddleButton" then
 		modelanimation = -1
 	end
 end)
 
 
-local elapsed = 0
-frame:SetScript("OnUpdate", function(self, elaps)
+local timer = 0
+frame:SetScript("OnUpdate", function(self, elapsed)
 	if modelanimation > -1 and modelanimation < 802 then
-		elapsed = elapsed + (elaps * 1000)
-		model:SetSequenceTime(modelanimation, elapsed)
+		timer = timer + (elapsed * 1000)
+		model:SetSequenceTime(modelanimation, timer)
+	end
+end)
+
+local elapsed = 0
+local timer = 0
+local degree = 0
+animframe:SetScript("OnUpdate", function(self, elapsed)
+	timer = timer + elapsed
+	if timer < 0.05 or not animation then
+		return
+	end
+	if degree < 360 and degree > - 360 then
+		if animation == "Positive" then
+			degree = degree + 1
+		elseif animation == "Negative" then
+			degree = degree - 1
+		end
+		model:SetRotation(math.rad(degree))
+	else
+		degree = 0
+		animation = false
+		modelanimation = -1
 	end
 end)
 
