@@ -48,6 +48,15 @@ model:SetAlpha(0.99)
 model:SetAllPoints(frame)
 model:Show()
 
+local texture = frame:CreateTexture("Texture", "High")
+texture:SetTexture("Interface\\AddOns\\Crabby\\Textures\\Eyes")
+texture:SetPoint("Top", frame, "Top", 0, -260)
+texture:SetWidth(128)
+texture:SetHeight(128)
+texture:SetAlpha(0.99)
+texture:SetBlendMode("Disable")
+texture:SetDrawLayer("Background", 0)
+
 local animframe = CreateFrame("Frame", nil, UIParent)
 
 -- You can animate the model by changing this from 0-802
@@ -77,10 +86,18 @@ frame:SetScript("OnMouseUp", function(self, button)
 			animation = "Positive"
 			modelanimation = 40
 		else
-			modelanimation = modelanimation + 1
+			if modelanimation < 802 then
+				modelanimation = modelanimation + 1
+			else
+				modelanimation = 0
+			end
 		end
 	elseif button == "MiddleButton" then
-		modelanimation = -1
+		if IsControlKeyDown() then
+			modelanimation = 1
+		else
+			modelanimation = -1
+		end
 	end
 end)
 
