@@ -30,7 +30,7 @@ CrabbyVars = Crabby:CopySettings(DefaultSettings,CrabbyVars)
 
 local frame = CreateFrame("Frame", nil, UIParent)
 frame:RegisterEvent("ADDON_LOADED")
-frame:SetPoint("CENTER", 0, 0)
+frame:SetPoint("Center", CrabbyVars.x, CrabbyVars.y)
 frame:SetWidth(512)
 frame:SetHeight(512)
 frame:SetAlpha(0.99)
@@ -38,8 +38,6 @@ frame:SetMovable(true)
 frame:EnableMouse(true)
 frame:SetClampedToScreen(false)
 frame:RegisterForDrag("LeftButton")
-frame:RegisterForDrag("RightButton")
-frame:RegisterForDrag("MiddleButton")
 
 local model = CreateFrame("PlayerModel", nil, frame)
 model:SetModel("Creature\\Deepseacrab\\deepseacrab_ghost.m2")
@@ -55,12 +53,6 @@ local modelanimation = -1
 frame:SetScript("OnMouseDown", function(self, button)
 	if button == "LeftButton" then
 		self:StartMoving()
-	elseif button == "RightButton" then
-		modelanimation = modelanimation + 1
-		--print(modelanimation)
-	elseif button == "MiddleButton" then
-		modelanimation = -1
-		--print(modelanimation)
 	end
 end)
 
@@ -73,6 +65,10 @@ frame:SetScript("OnMouseUp", function(self, button)
 		CrabbyVars.y = B2 - B1 + (H2 - H1) / 2
 		self:ClearAllPoints()
 		self:SetPoint("CENTER", L2 - L1 + (W2 - W1) / 2, B2 - B1 + (H2 - H1) / 2)
+	elseif button == "RightButton" then
+		modelanimation = modelanimation + 1
+	elseif button == "MiddleButton" then
+		modelanimation = -1
 	end
 end)
 
