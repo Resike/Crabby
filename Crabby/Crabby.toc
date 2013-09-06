@@ -1,0 +1,9 @@
+﻿## Interface: 50300
+## Title: Crabby |cFF99CC01rev |cFFFF00001.0.0
+## Version: 1.0.0
+## Author: Resike
+## Notes: Crabby the dungeon helper!
+## DefaultState: Enabled
+## SavedVariablesPerCharacter: CrabbyVars
+
+Crabby.lua
